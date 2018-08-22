@@ -1,8 +1,7 @@
-all: build build-lts
+all: image lts_image
 
-build: Dockerfile
-	@docker build . --squash --build-arg TAG=latest -t allir/jenkins:latest
+image: Dockerfile
+	@docker build . --build-arg TAG=latest -t allir/jenkins:latest
 
-build-lts: Dockerfile
-	@docker build . --squash --build-arg TAG=lts -t allir/jenkins:lts
-
+lts_image: Dockerfile
+	@docker build . --build-arg TAG=lts -t allir/jenkins:lts
