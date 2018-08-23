@@ -2,13 +2,17 @@ ARG TAG=latest
 FROM jenkins/jenkins:$TAG
 MAINTAINER alli@allir.org
 
+# Variables
+## GOSU Version to install
+## The docker group GID from the host, this can be set when it's not 999 on the host
 ENV GOSU_VERSION 1.10
 ENV DOCKER_GID 999
 ENV DOCKER_GROUP docker
 
+# Install GOSU and the latest Docker CE binaries
 USER root
-# Install the latest Docker CE binaries & GOSU
 RUN set -ex \
+    `# Install Dependencies`\
     && apt-get update -qq \
     && apt-get install -qqy --no-install-recommends \
       apt-transport-https \
@@ -28,13 +32,15 @@ RUN set -ex \
     && apt-get update -qq \
     && apt-get install -qqy docker-ce \
     `# Cleanup` \
-    && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Add jenkins user to docker group
 RUN gpasswd -a jenkins docker
 
-COPY docker-jenkins.sh /usr/local/bin/docker-jenkins.sh
-RUN chmod u=rx,go= /usr/local/bin/docker-jenkins.sh
-
-# Entrypoint script will switch to jenkins user with gosu
-ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/docker-jenkins.sh"]
+# Run jenkins after running docker entrypoint script
+# Everything runs as root (or last USER directive) gosu is then used in the script
+# docker-entrypoint.sh usage: <user> <script> 
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY docker-entrypoint.d/* /etc/docker-entrypoint.d/
+RUN chmod u=rx,go= /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh", "jenkins","/sbin/tini","--","/usr/local/bin/jenkins.sh"]
