@@ -1,6 +1,6 @@
 ARG TAG=latest
 FROM jenkins/jenkins:$TAG
-MAINTAINER alli@allir.org
+LABEL maintainer="alli@allir.org"
 
 # Variables
 ## GOSU Version to install
