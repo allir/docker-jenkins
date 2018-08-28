@@ -3,8 +3,9 @@ FROM jenkins/jenkins:$TAG
 LABEL maintainer="alli@allir.org"
 
 # Variables
-## The docker group GID from the host, this can be set when it's not 999 on the host
-ENV DOCKER_GID 999 \
+## The docker UID and GID from the host, the DOCKER_GID should match the docker group GID on the host so that the jenkins user can use docker without sudo.
+ENV DOCKER_UID 1000 \
+    DOCKER_GID 999 \
     DOCKER_GROUP docker
 
 # Install GOSU and the latest Docker CE binaries
