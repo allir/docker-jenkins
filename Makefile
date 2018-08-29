@@ -1,19 +1,21 @@
-TAG="alpine"
-BUILDFILE="Dockerfile.alpine"
-default: Dockerfile
-	@docker build . -f $(BUILDFILE) --build-arg TAG=$(TAG) -t allir/jenkins:$(TAG)
+default: lts
 
 all: latest lts alpine lts-alpine 
 
 latest: Dockerfile
 	@docker build . --build-arg TAG=latest -t allir/jenkins:latest
 
-alpine: Dockerfile
+alpine: Dockerfile.alpine
 	@docker build . -f Dockerfile.alpine --build-arg TAG=alpine -t allir/jenkins:alpine
+
+slim: Dockerfile
+	@docker build . --build-arg TAG=slim -t allir/jenkins:slim
 
 lts: Dockerfile
 	@docker build . --build-arg TAG=lts -t allir/jenkins:lts
 
-lts-alpine: Dockerfile
+lts-alpine: Dockerfile.alpine
 	@docker build . -f Dockerfile.alpine --build-arg TAG=lts-alpine -t allir/jenkins:lts-alpine
 
+lts-slim: Dockerfile
+	@docker build . --build-arg TAG=lts-slim -t allir/jenkins:lts-slim
