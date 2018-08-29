@@ -12,12 +12,9 @@ ENV DOCKER_UID 1000 \
 USER root
 RUN set -ex \
     `# Install Dependencies`\
+      && buildDeps='apt-transport-https software-properties-common curl' \
       && apt-get update -qq \
-      && apt-get install -qqy --no-install-recommends \
-        apt-transport-https \
-        ca-certificates \
-        curl \
-        software-properties-common \
+      && apt-get install -qqy --no-install-recommends $buildDeps \
     `# Install GOSU` \
       && apt-get install -y --no-install-recommends \
         gosu \
@@ -31,6 +28,7 @@ RUN set -ex \
       && apt-get update -qq \
       && apt-get install -qqy docker-ce \
     `# Cleanup` \
+      && apt-get remove -qqy --purge --auto-remove $buildDeps \ 
       && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add jenkins user to docker group

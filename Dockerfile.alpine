@@ -13,11 +13,10 @@ ENV GOSU_VERSION="1.10" \
 USER root
 RUN set -ex \
     `# Install Dependencies`\
+      && buildDeps='dpkg gnupg openssl' \
       && apk --no-cache add \
         shadow \
-        dpkg \
-        gnupg \
-        openssl \
+        $buildDeps \
     `# Install GOSU` \
 	&& dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
 	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
@@ -32,7 +31,7 @@ RUN set -ex \
       && apk add docker py-pip && pip install --upgrade pip \
       && pip install docker-compose \
     `# Cleanup` \
-      && apk del --purge dpkg gnupg openssl \
+      && apk del --purge $buildDeps \
       && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* 
 
 # Add jenkins user to docker group
