@@ -5,8 +5,8 @@ services:
   jenkins:
     build:
       context: ./
-      dockerfile: Dockerfile.alpine
-    image: allir/jenkins:alpine  
+      dockerfile: Dockerfile
+    image: allir/jenkins:latest
     container_name: jenkins_master
     ports:
       - '8080:8080'

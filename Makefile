@@ -1,4 +1,4 @@
-default: lts
+default: lts-slim
 
 all: latest lts alpine lts-alpine 
 
