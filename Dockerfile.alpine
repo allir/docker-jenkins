@@ -34,9 +34,6 @@ RUN set -ex \
       && apk del --purge $buildDeps \
       && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* 
 
-# Add jenkins user to docker group
-RUN usermod -aG docker jenkins
-
 # Run jenkins after running docker entrypoint script
 # Everything runs as root (or last USER directive) gosu is then used in the script
 # docker-entrypoint.sh usage: <user> <script> 
@@ -44,4 +41,5 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY docker-entrypoint.d/* /etc/docker-entrypoint.d/
 RUN chmod u=rx,go= /usr/local/bin/docker-entrypoint.sh \
     && chmod u=rx,go= /etc/docker-entrypoint.d/*
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh", "jenkins","/sbin/tini","--","/usr/local/bin/jenkins.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh", "sbin/tini","--","/usr/local/bin/jenkins.sh"]
+

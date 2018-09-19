@@ -8,4 +8,4 @@ then
   /bin/run-parts --verbose --regex '\.(sh|rb)$' "$DIR"
 fi
 
-exec gosu "$@"
+exec gosu "jenkins:${DOCKER_GROUP}" "$@"

@@ -5,5 +5,6 @@
 : ${DOCKER_GID:="999"}
 : ${DOCKER_GROUP:="docker"}
 
-usermod -u ${DOCKER_UID} jenkins
 groupmod -g ${DOCKER_GID} ${DOCKER_GROUP}
+usermod -u ${DOCKER_UID} -aG ${DOCKER_GROUP} jenkins
+

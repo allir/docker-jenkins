@@ -10,4 +10,4 @@ then
   /bin/run-parts "$DIR"
 fi
 
-exec gosu "$@"
+exec gosu "jenkins:${DOCKER_GROUP}" "$@"

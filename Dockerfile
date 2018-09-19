@@ -12,9 +12,9 @@ ENV DOCKER_UID 1000 \
 USER root
 RUN set -ex \
     `# Install Dependencies`\
-      && buildDeps='apt-transport-https software-properties-common curl' \
+      && buildDeps='apt-transport-https software-properties-common' \
       && apt-get update -qq \
-      && apt-get install -qqy --no-install-recommends $buildDeps \
+      && apt-get install -qqy --no-install-recommends $buildDeps curl \
     `# Install GOSU` \
       && apt-get install -y --no-install-recommends \
         gosu \
@@ -31,9 +31,6 @@ RUN set -ex \
       && apt-get remove -qqy --purge --auto-remove $buildDeps \ 
       && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Add jenkins user to docker group
-RUN usermod -aG docker jenkins
-
 # Run jenkins after running docker entrypoint script
 # Everything runs as root (or last USER directive) gosu is then used in the script
 # docker-entrypoint.sh usage: <user> <script> 
@@ -41,4 +38,5 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY docker-entrypoint.d/* /etc/docker-entrypoint.d/
 RUN chmod u=rx,go= /usr/local/bin/docker-entrypoint.sh \
     && chmod u=rx,go= /etc/docker-entrypoint.d/* 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh", "jenkins","/sbin/tini","--","/usr/local/bin/jenkins.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh", "/sbin/tini","--","/usr/local/bin/jenkins.sh"]
+
