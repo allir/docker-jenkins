@@ -4,9 +4,9 @@ LABEL maintainer="alli@allir.org"
 
 # Variables
 ## The docker UID and GID from the host, the DOCKER_GID should match the docker group GID on the host so that the jenkins user can use docker without sudo.
-ENV DOCKER_UID 1000 \
-    DOCKER_GID 999 \
-    DOCKER_GROUP docker
+ENV DOCKER_UID 1000
+ENV DOCKER_GID 999
+ENV DOCKER_GROUP docker
 
 # Install GOSU and the latest Docker CE binaries
 USER root
@@ -34,9 +34,10 @@ RUN set -ex \
 # Run jenkins after running docker entrypoint script
 # Everything runs as root (or last USER directive) gosu is then used in the script
 # docker-entrypoint.sh usage: <user> <script> 
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-COPY docker-entrypoint.d/* /etc/docker-entrypoint.d/
-RUN chmod u=rx,go= /usr/local/bin/docker-entrypoint.sh \
-    && chmod u=rx,go= /etc/docker-entrypoint.d/* 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh", "/sbin/tini","--","/usr/local/bin/jenkins.sh"]
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker-entrypoint.d/* /docker-entrypoint.d/
+RUN chmod u=rx,go= /docker-entrypoint.sh \
+    && chmod u=rx,go= /docker-entrypoint.d/* 
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["gosu","jenkins:docker","tini","--","/usr/local/bin/jenkins.sh"]
 
