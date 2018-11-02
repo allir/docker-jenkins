@@ -11,11 +11,11 @@ ENV DOCKER_GROUP docker
 # Install GOSU and the latest Docker CE binaries
 USER root
 RUN set -ex \
-    `# Install Dependencies`\
+    # Install Dependencies
       && buildDeps='apt-transport-https software-properties-common' \
       && apt-get update -qq \
       && apt-get install -qqy --no-install-recommends $buildDeps curl \
-    `# Install GOSU` \
+    # Install GOSU
       && apt-get install -y --no-install-recommends \
         gosu \
       `# Install Docker CE` \
@@ -27,17 +27,12 @@ RUN set -ex \
          stable" \
       && apt-get update -qq \
       && apt-get install -qqy docker-ce \
-    `# Cleanup` \
+    # Cleanup
       && apt-get remove -qqy --purge --auto-remove $buildDeps \ 
       && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Run jenkins after running docker entrypoint script
-# Everything runs as root (or last USER directive) gosu is then used in the script
-# docker-entrypoint.sh usage: <user> <script> 
+# The entrypoint runs as root (or last USER directive) gosu is then used in the script
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-COPY docker-entrypoint.d/* /docker-entrypoint.d/
-RUN chmod u=rx,go= /docker-entrypoint.sh \
-    && chmod u=rx,go= /docker-entrypoint.d/* 
+RUN chmod u=rx,go= /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["gosu","jenkins:docker","tini","--","/usr/local/bin/jenkins.sh"]
-

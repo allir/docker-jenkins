@@ -6,6 +6,11 @@ set -e
 : ${DOCKER_GID:="999"}
 : ${DOCKER_GROUP:="docker"}
 
+# Alpine has a "ping" group by default with GID 999
+if [ $DOCKER_GID == "999" ]; then
+  delgroup ping
+fi
+
 groupmod -g ${DOCKER_GID} ${DOCKER_GROUP}
 usermod -u ${DOCKER_UID} -aG ${DOCKER_GROUP} jenkins
 
