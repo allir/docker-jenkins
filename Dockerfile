@@ -18,7 +18,7 @@ RUN set -ex \
     # Install GOSU
       && apt-get install -y --no-install-recommends \
         gosu \
-      `# Install Docker CE` \
+    # Install Docker CE
       && curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add - \
       && apt-key fingerprint 0EBFCD88 \
       && add-apt-repository \
@@ -26,7 +26,7 @@ RUN set -ex \
          $(lsb_release -cs) \
          stable" \
       && apt-get update -qq \
-      && apt-get install -qqy docker-ce \
+      && apt-get install -qqy --no-install-recommends docker-ce \
     # Cleanup
       && apt-get remove -qqy --purge --auto-remove $buildDeps \ 
       && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
