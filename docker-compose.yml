@@ -7,9 +7,10 @@ services:
       context: ./
       dockerfile: Dockerfile
     image: allir/jenkins:latest
-    container_name: jenkins_master
+    container_name: jenkins
     ports:
       - '8080:8080'
+      - '50000:50000'
     networks:
       - jenkins_network
     volumes:
@@ -17,7 +18,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - JENKINS_OPTS="--prefix=/jenkins"
-    restart: on-failure
+    restart: unless-stopped
 
 networks:
   jenkins_network:

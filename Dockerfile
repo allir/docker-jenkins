@@ -1,4 +1,4 @@
-ARG TAG=latest
+ARG TAG=2.168
 FROM jenkins/jenkins:$TAG
 LABEL maintainer="alli@allir.org"
 
@@ -10,11 +10,15 @@ ENV DOCKER_GROUP docker
 
 # Install GOSU and the latest Docker CE binaries
 USER root
-RUN set -ex \
-    # Install Dependencies
-      && buildDeps='apt-transport-https software-properties-common' \
+RUN set -euo pipefail; \
+    # Install  Dependencies & Addons
+      buildDeps='apt-transport-https software-properties-common' \
       && apt-get update -qq \
-      && apt-get install -qqy --no-install-recommends $buildDeps curl \
+      && apt-get install -qqy --no-install-recommends \
+        $buildDeps \
+        ca-certificates \
+        curl \
+        jq \
     # Install GOSU
       && apt-get install -y --no-install-recommends \
         gosu \

@@ -1,21 +1,22 @@
-default: lts-slim
+NS ?= allir
+IMAGE_NAME ?= jenkins
+IMAGE_TAG ?= latest
+FROM_TAG ?= $(IMAGE_TAG)
 
-all: latest lts alpine lts-alpine 
+.PHONY: help
+help: ## This help
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-latest: Dockerfile
-	@docker build . --build-arg TAG=latest -t allir/jenkins:latest
+.DEFAULT_GOAL := help
 
-alpine: Dockerfile.alpine
-	@docker build . -f Dockerfile.alpine --build-arg TAG=alpine -t allir/jenkins:alpine
+.PHONY: build push release default
+build: Dockerfile ## Build docker image
+	docker build . --build-arg TAG=$(FROM_TAG) -t $(NS)/$(IMAGE_NAME):$(IMAGE_TAG)
 
-slim: Dockerfile
-	@docker build . --build-arg TAG=slim -t allir/jenkins:slim
+build-nc: Dockerfile ## Build docker image (No cache)
+	docker build . --no-cache --build-arg TAG=$(FROM_TAG) -t $(NS)/$(IMAGE_NAME):$(IMAGE_TAG)
 
-lts: Dockerfile
-	@docker build . --build-arg TAG=lts -t allir/jenkins:lts
+push: build ## Push docker image to repository
+	docker push $(NS)/$(IMAGE_NAME):$(IMAGE_TAG)
 
-lts-alpine: Dockerfile.alpine
-	@docker build . -f Dockerfile.alpine --build-arg TAG=lts-alpine -t allir/jenkins:lts-alpine
-
-lts-slim: Dockerfile
-	@docker build . --build-arg TAG=lts-slim -t allir/jenkins:lts-slim
+release: Dockerfile build push ## Build and Push image to repository

@@ -13,7 +13,7 @@ Using `docker` to run a new container.
 
 ```bash
 docker run -d -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home allir/jenkins
-````
+```
 
 Example with passing the docker GID:
 
