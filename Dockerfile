@@ -1,4 +1,4 @@
-ARG TAG=2.168
+ARG TAG=2.164.1
 FROM jenkins/jenkins:$TAG
 LABEL maintainer="alli@allir.org"
 

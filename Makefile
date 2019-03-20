@@ -1,6 +1,6 @@
 NS ?= allir
 IMAGE_NAME ?= jenkins
-IMAGE_TAG ?= latest
+IMAGE_TAG ?= lts
 FROM_TAG ?= $(IMAGE_TAG)
 
 .PHONY: help

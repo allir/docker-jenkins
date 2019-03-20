@@ -4,7 +4,7 @@ set -euo pipefail
 
 DOCKERFILE='Dockerfile'
 VERSION_LINE='ARG' # Can be FROM or ARG
-VERSION_REGEX='^\d\.\d+$' # REGEX Pattern for version
+VERSION_REGEX='^\d\.\d+\.\d+$' # REGEX Pattern for version
 
 REPO=$(grep "^FROM" Dockerfile | head -n1 | cut -d' ' -f2 | cut -d: -f1)
 if [ $VERSION_LINE == 'FROM' ]; then
