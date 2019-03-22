@@ -10,7 +10,7 @@ ENV DOCKER_GROUP docker
 
 # Install GOSU and the latest Docker CE binaries
 USER root
-RUN set -euo pipefail; \
+RUN set -e; \
     # Install  Dependencies & Addons
       buildDeps='apt-transport-https software-properties-common' \
       && apt-get update -qq \
